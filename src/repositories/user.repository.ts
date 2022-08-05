@@ -1,5 +1,6 @@
 import { client } from "../config/database.js";
 import { CreateUserData } from "../services/user.service.js";
+import { UpdateUserData } from "../services/user.service.js";
 
 const findUserByEmail = async (email: string) => {
 	return await client.user.findUnique({
@@ -19,7 +20,30 @@ const insert = async (user: CreateUserData) => {
 	});
 };
 
+const update = async (user: UpdateUserData) => {
+  await client.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    },
+  });
+}
+
+const deleteUser = async (id: number) => {
+  await client.user.delete({
+    where: {
+      id,
+    },
+  });
+}
+
 export const userRepository = {
 	findUserByEmail,
 	insert,
+  update,
+  deleteUser,
 };
