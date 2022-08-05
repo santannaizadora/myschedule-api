@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import Cryptr from "cryptr";
 import jwt from "jsonwebtoken";
-import { userRepository } from "../repositories/user.repository";
+import { userRepository } from "../repositories/user.repository.js";
 import "../setup.js";
 
 export type CreateUserData = Omit<User, "id">;
@@ -56,7 +56,7 @@ const login = async (email: string, password: string) => {
   return { token };
 };
 
-export const authService = {
+export const userService = {
 	createUser,
 	login,
 };
