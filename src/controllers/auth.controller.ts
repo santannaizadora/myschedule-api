@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { userService, CreateUserData } from "../services/user.service.js";
 
-export const logon = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
     const { name, email, password }: CreateUserData = req.body;
     await userService.createUser({name, email, password});
     res.sendStatus(201);
