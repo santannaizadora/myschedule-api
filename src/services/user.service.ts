@@ -7,10 +7,22 @@ import "../setup.js";
 export type CreateUserData = Omit<User, "id">;
 export type UpdateUserData = Partial<User>;
 
-const cryptr = new Cryptr(process.env.ENCRYPTION_KEY || "secret");
+const cryptr = new Cryptr(process.env.SECRET_KEY);
+
+const validateCredentials = async (email: string, password: string) => {
+	const user = await userRepository.findUserByEmail(email);
+	const isValid = cryptr.decrypt(user.password) === password;
+	if (!user || !isValid) {
+		throw {
+			type: "forbidden",
+			message: "E-mail ou senha inválidos",
+		};
+	}
+	return user;
+};
 
 const createUser = async (data: CreateUserData) => {
-	const { name, email, password } = data;
+	const { email, password } = data;
 	const user = await userRepository.findUserByEmail(email);
 	if (user) {
 		throw {
@@ -18,41 +30,14 @@ const createUser = async (data: CreateUserData) => {
 			message: "Email já cadastrado",
 		};
 	}
-
-	const hashedPassword = cryptr.encrypt(password);
-	await userRepository.insert({
-		name,
-		email,
-		password: hashedPassword,
-	});
+	data.password = cryptr.encrypt(password);
+	await userRepository.insert(data);
 };
 
 const login = async (email: string, password: string) => {
-	const user = await userRepository.findUserByEmail(email);
-	if (!user) {
-		throw {
-			type: "not_found",
-			message: "E-mail ou senha inválidos",
-		};
-	}
-
-	const isValid = cryptr.decrypt(password) === user.password;
-	if (!isValid) {
-		throw {
-			type: "not_found",
-			message: "E-mail ou senha inválidos",
-		};
-	}
-
-	const token = jwt.sign(
-		{
-			id: user.id,
-			email: user.email,
-      name: user.name,
-		},
-		process.env.JWT_SECRET || "secret"
-	);
-	
+	const user = await validateCredentials(email, password);
+	const { id, name } = user;
+	const token = jwt.sign({id, name,}, process.env.JWT_SECRET);
   return { token };
 };
 
