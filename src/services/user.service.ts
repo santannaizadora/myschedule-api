@@ -9,10 +9,10 @@ export type UpdateUserData = Partial<User>;
 
 const cryptr = new Cryptr(process.env.SECRET_KEY);
 
-const validateCredentials = async (email: string, password: string) => {
+const validateLogin = async (email: string, password: string) => {
 	const user = await userRepository.findUserByEmail(email);
-	const isValid = cryptr.decrypt(user.password) === password;
-	if (!user || !isValid) {
+	const isPasswordValid = cryptr.decrypt(user.password) === password;
+	if (!user || !isPasswordValid) {
 		throw {
 			type: "forbidden",
 			message: "E-mail ou senha inválidos",
@@ -35,10 +35,10 @@ const createUser = async (data: CreateUserData) => {
 };
 
 const login = async (email: string, password: string) => {
-	const user = await validateCredentials(email, password);
+	const user = await validateLogin(email, password);
 	const { id, name } = user;
-	const token = jwt.sign({id, name,}, process.env.JWT_SECRET);
-  return { token };
+	const token = jwt.sign({ id, name }, process.env.JWT_SECRET);
+	return { token };
 };
 
 export const userService = {

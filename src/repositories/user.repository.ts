@@ -1,6 +1,5 @@
 import { client } from "../config/database.js";
-import { CreateUserData } from "../services/user.service.js";
-import { UpdateUserData } from "../services/user.service.js";
+import { CreateUserData, UpdateUserData } from "../services/user.service.js";
 
 const findUserByEmail = async (email: string) => {
 	return await client.user.findUnique({
