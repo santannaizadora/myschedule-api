@@ -9,6 +9,14 @@ const findUserByEmail = async (email: string) => {
 	});
 };
 
+const findUserById = async (id: number) => {
+  return await client.user.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
 const insert = async (user: CreateUserData) => {
 	await client.user.create({
 		data: {
@@ -42,6 +50,7 @@ const deleteUser = async (id: number) => {
 
 export const userRepository = {
 	findUserByEmail,
+  findUserById,
 	insert,
   update,
   deleteUser,

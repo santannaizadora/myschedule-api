@@ -58,10 +58,19 @@ const deleteAppointment = async (id: number) => {
   });
 }
 
+const deleteUserAppointments = async (user_id: number) => {
+  await client.appointment.deleteMany({
+    where: {
+      user_id,
+    },
+  });
+}
+
 export const appointmentRepository = {
   findAppointmentByDateAndUser,
   findAppointmentByIdAndUser,
   insert,
   update,
   deleteAppointment,
+  deleteUserAppointments,
 };

@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import Cryptr from "cryptr";
 import jwt from "jsonwebtoken";
 import { userRepository } from "../repositories/user.repository.js";
+import { appointmentRepository } from "../repositories/appointment.repository.js";
 import "../setup.js";
 
 export type CreateUserData = Omit<User, "id">;
@@ -41,7 +42,33 @@ const login = async (email: string, password: string) => {
 	return { token };
 };
 
+const updateUser = async (id: number, data: UpdateUserData) => {
+	const user = await userRepository.findUserById(id);
+	if (!user) {
+		throw {
+			type: "not_found",
+			message: "Usuário não encontrado",
+		};
+	}
+	await userRepository.update({ id, ...data });
+}
+
+const deleteUser = async (id: number) => {
+	const user = await userRepository.findUserById(id);
+	if (!user) {
+		throw {
+			type: "not_found",
+			message: "Usuário não encontrado",
+		};
+	}
+	await userRepository.deleteUser(id);
+	await appointmentRepository.deleteUserAppointments(id);
+}
+
+
 export const userService = {
 	createUser,
 	login,
+	updateUser,
+	deleteUser,
 };
