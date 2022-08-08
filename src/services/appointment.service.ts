@@ -46,9 +46,34 @@ const getDayAppointments = async (date: string, user_id: number) => {
   return await appointmentRepository.findAppointmentByDateAndUser(date, user_id);
 }
 
+const updateAppointment = async (id: number, appointment: UpdateAppointmentData) => {
+  validateTime(appointment.initial_time, appointment.final_time);
+  validateDate(appointment.date);
+  appointment.id = id;
+  return await appointmentRepository.update( appointment);
+}
+
+const getAppointment = async (id: number, user_id: number) => {
+  const appointment = await appointmentRepository.findAppointmentByIdAndUser(id, user_id);
+  if (!appointment) {
+    throw {
+      type: "not_found",
+      message: "Agendamento não encontrado",
+    };
+  }
+  return appointment;
+}
+
+const deleteAppointment = async (id: number, user_id: number) => {
+  const appointment = await getAppointment(id, user_id);
+  await appointmentRepository.deleteAppointment(appointment.id);
+}
 
 export const appointmentService = {
   createAppointment,
   getTodayAppointments,
   getDayAppointments,
+  updateAppointment,
+  getAppointment,
+  deleteAppointment,
 };
