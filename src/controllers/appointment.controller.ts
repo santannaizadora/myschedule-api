@@ -13,3 +13,10 @@ export const getTodayAppointments = async (req: Request, res: Response) => {
     const appointments = await appointmentService.getTodayAppointments(user_id);
     res.json(appointments);
 }
+
+export const getDayAppointments = async (req: Request, res: Response) => {
+    const date = req.params.date;
+    const user_id = res.locals.user.id;
+    const appointments = await appointmentService.getDayAppointments(date, user_id);
+    res.json(appointments);
+}

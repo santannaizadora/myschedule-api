@@ -34,7 +34,6 @@ const validateDate = (date: string) => {
 const createAppointment = async (appointment: CreateAppointmentData) => {
   validateTime(appointment.initial_time, appointment.final_time);
   validateDate(appointment.date);
-  appointment.date = dayjs(appointment.date).format("DD-MM-YYYY");
   return await appointmentRepository.insert(appointment);
 }
 
@@ -43,7 +42,13 @@ const getTodayAppointments = async (user_id: number) => {
   return await appointmentRepository.findAppointmentByDateAndUser(today, user_id);
 }
 
+const getDayAppointments = async (date: string, user_id: number) => {
+  return await appointmentRepository.findAppointmentByDateAndUser(date, user_id);
+}
+
+
 export const appointmentService = {
   createAppointment,
   getTodayAppointments,
+  getDayAppointments,
 };
