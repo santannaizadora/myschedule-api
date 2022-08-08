@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "appointments" ALTER COLUMN "date" SET DATA TYPE TEXT,
+ALTER COLUMN "initial_time" SET DATA TYPE TEXT,
+ALTER COLUMN "final_time" SET DATA TYPE TEXT;
