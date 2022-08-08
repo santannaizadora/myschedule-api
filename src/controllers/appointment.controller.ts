@@ -7,3 +7,9 @@ export const insert = async (req: Request, res: Response) => {
     await appointmentService.createAppointment({title, date, observation, place, initial_time, final_time, user_id});
     res.sendStatus(201);
 }
+
+export const getTodayAppointments = async (req: Request, res: Response) => {
+    const user_id = res.locals.user.id;
+    const appointments = await appointmentService.getTodayAppointments(user_id);
+    res.json(appointments);
+}
