@@ -24,11 +24,11 @@ model User {
 model Appointment {
   id           Int      @id @default(autoincrement())
   title        String
-  date         String
+  date         DateTime @db.Date
   observation  String
   place        String
-  initial_time String
-  final_time   String
+  initial_time DateTime @db.Time
+  final_time   DateTime @db.Time
 
   user_id Int
   user    User @relation(fields: [user_id], references: [id])

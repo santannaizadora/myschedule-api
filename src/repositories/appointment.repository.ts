@@ -1,11 +1,14 @@
 import { client } from "../config/database.js";
 import { CreateAppointmentData, UpdateAppointmentData } from "../services/appointment.service.js";
 
-const findAppointmentByDateAndUser = async (date: string, user_id: number) => {
+const findAppointmentByDateAndUser = async (date: Date, user_id: number) => {
   return await client.appointment.findMany({
     where: {
       date,
       user_id,
+    },
+    orderBy: {
+      initial_time: "asc",
     },
   });
 }
@@ -66,6 +69,22 @@ const deleteUserAppointments = async (user_id: number) => {
   });
 }
 
+const getMonthAppointments = async (user_id: number, month: number, year: number) => {
+  return await client.appointment.findMany({
+    where: {
+      user_id,
+      date: {
+        lte: new Date(year, month, 0),
+        gte: new Date(year, month-1, 1),
+      },
+    },
+    orderBy: {
+      date: "asc",
+    },
+  });
+}
+
+
 export const appointmentRepository = {
   findAppointmentByDateAndUser,
   findAppointmentByIdAndUser,
@@ -73,4 +92,5 @@ export const appointmentRepository = {
   update,
   deleteAppointment,
   deleteUserAppointments,
+  getMonthAppointments,
 };

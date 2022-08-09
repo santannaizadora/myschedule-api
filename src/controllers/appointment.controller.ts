@@ -42,3 +42,10 @@ export const getAppointmentById = async (req: Request, res: Response) => {
     const appointment = await appointmentService.getAppointment(Number(id), user_id);
     res.json(appointment);
 }
+
+export const getByMonthAndYear = async (req: Request, res: Response) => {
+    const { month, year } = req.params;
+    const user_id = res.locals.user.id;
+    const appointments = await appointmentService.getByMonth(Number(month), Number(year), user_id);
+    res.json(appointments);
+}
