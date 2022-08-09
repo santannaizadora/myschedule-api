@@ -27,31 +27,8 @@ const insert = async (user: CreateUserData) => {
 	});
 };
 
-const update = async (user: UpdateUserData) => {
-  await client.user.update({
-    where: {
-      id: user.id,
-    },
-    data: {
-      name: user.name,
-      email: user.email,
-      password: user.password,
-    },
-  });
-}
-
-const deleteUser = async (id: number) => {
-  await client.user.delete({
-    where: {
-      id,
-    },
-  });
-}
-
 export const userRepository = {
 	findUserByEmail,
   findUserById,
 	insert,
-  update,
-  deleteUser,
 };
