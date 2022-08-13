@@ -11,7 +11,7 @@ const cryptr = new Cryptr(process.env.SECRET_KEY);
 
 const validateLogin = async (email: string, password: string) => {
 	const user = await userRepository.findUserByEmail(email);
-	const isPasswordValid = cryptr.decrypt(user.password) === password;
+	const isPasswordValid = user ? cryptr.decrypt(user.password) === password : false;
 	if (!user || !isPasswordValid) {
 		throw {
 			type: "forbidden",
