@@ -6,7 +6,6 @@ export type CreateAppointmentData = Omit<Appointment, "id">;
 export type UpdateAppointmentData = Partial<Appointment>;
 
 const validateTime = (initial_time: Date, final_time: Date) => {
-  console.log(initial_time, final_time);
   if ( dayjs(initial_time).isAfter(dayjs(final_time))) {
     throw {
       type: "bad_request",

@@ -6,7 +6,6 @@ type CustomError = {
 };
 
 export const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
-	console.log(err);
 	if (err.type === "not_found") {
 		return res.status(404).send({
 			message: err.message,

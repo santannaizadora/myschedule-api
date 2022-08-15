@@ -5,7 +5,10 @@ import JoiDate from "@hapi/joi-date";
 const Joi = JoiBase.extend(JoiDate);
 
 export const appointmentSchema = Joi.object<CreateAppointmentData>({
-	title: Joi.string().required(),
+	title: Joi.string().required().messages({
+		"string.base": "Título é um campo obrigatório",
+		"string.empty": "Título é um campo obrigatório",
+	}),
 	date: Joi.date().format("YYYY-MM-DD").required().messages({
 		"date.format": "Data deve ser no formato YYYY-MM-DD",
 	}),
