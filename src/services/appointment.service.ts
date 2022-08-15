@@ -6,6 +6,7 @@ export type CreateAppointmentData = Omit<Appointment, "id">;
 export type UpdateAppointmentData = Partial<Appointment>;
 
 const validateTime = (initial_time: Date, final_time: Date) => {
+  console.log(initial_time, final_time);
   if ( dayjs(initial_time).isAfter(dayjs(final_time))) {
     throw {
       type: "bad_request",
@@ -32,11 +33,11 @@ const validateDate = (date: Date) => {
 
 const createAppointment = async (appointment: CreateAppointmentData) => {
   const { initial_time, final_time, date } = appointment;
-  validateTime(initial_time, final_time);
-  validateDate(date);
   appointment.date = new Date(date);
   const initial = new Date(`${date} ${initial_time}`);
   const final = new Date(`${date} ${final_time}`);
+  validateTime(initial, final);
+  validateDate(date);
 
   appointment.initial_time = new Date(initial.getTime() - initial.getTimezoneOffset() * 60000);
   appointment.final_time = new Date(final.getTime() - final.getTimezoneOffset() * 60000);
